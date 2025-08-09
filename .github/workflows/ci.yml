@@ -1,0 +1,208 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  backend-tests:
+    name: Backend Tests (PHP/Symfony)
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: tuniskill_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, dom, filter, gd, json, pdo, zip
+        coverage: xdebug
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: backend/tuniskill-api/vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Install Composer dependencies
+      working-directory: backend/tuniskill-api
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Create test database
+      working-directory: backend/tuniskill-api
+      run: |
+        cp .env .env.test.local
+        echo "DATABASE_URL=mysql://root:root@127.0.0.1:3306/tuniskill_test" >> .env.test.local
+        php bin/console doctrine:database:create --env=test
+        php bin/console doctrine:migrations:migrate --no-interaction --env=test
+
+    - name: Run PHPUnit tests
+      working-directory: backend/tuniskill-api
+      run: php bin/phpunit --coverage-clover coverage.xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: backend/tuniskill-api/coverage.xml
+        flags: backend
+
+  frontend-tests:
+    name: Frontend Tests (Angular)
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/tuniskill-frontend/package-lock.json
+
+    - name: Install dependencies
+      working-directory: frontend/tuniskill-frontend
+      run: npm ci
+
+    - name: Run linting
+      working-directory: frontend/tuniskill-frontend
+      run: npm run lint
+
+    - name: Run unit tests
+      working-directory: frontend/tuniskill-frontend
+      run: npm run test:ci
+
+    - name: Build application
+      working-directory: frontend/tuniskill-frontend
+      run: npm run build --prod
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: frontend/tuniskill-frontend/coverage/lcov.info
+        flags: frontend
+
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        tools: php-cs-fixer, phpstan
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install backend dependencies
+      working-directory: backend/tuniskill-api
+      run: composer install --prefer-dist --no-progress
+
+    - name: Install frontend dependencies
+      working-directory: frontend/tuniskill-frontend
+      run: npm ci
+
+    - name: Run PHP CS Fixer
+      working-directory: backend/tuniskill-api
+      run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+    - name: Run PHPStan
+      working-directory: backend/tuniskill-api
+      run: vendor/bin/phpstan analyse src --level=5
+
+    - name: Run ESLint
+      working-directory: frontend/tuniskill-frontend
+      run: npm run lint
+
+    - name: Run Prettier check
+      working-directory: frontend/tuniskill-frontend
+      run: npm run format:check
+
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Run Symfony Security Checker
+      working-directory: backend/tuniskill-api
+      run: |
+        curl -sS https://get.symfony.com/cli/installer | bash
+        ~/.symfony5/bin/symfony security:check
+
+    - name: Run npm audit
+      working-directory: frontend/tuniskill-frontend
+      run: npm audit --audit-level moderate
+
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, code-quality, security-scan]
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install backend dependencies
+      working-directory: backend/tuniskill-api
+      run: composer install --no-dev --optimize-autoloader
+
+    - name: Install frontend dependencies
+      working-directory: frontend/tuniskill-frontend
+      run: npm ci
+
+    - name: Build frontend
+      working-directory: frontend/tuniskill-frontend
+      run: npm run build --prod
+
+    - name: Create deployment artifact
+      run: |
+        tar -czf tuniskill-deployment.tar.gz \
+          backend/tuniskill-api \
+          frontend/tuniskill-frontend/dist \
+          --exclude=backend/tuniskill-api/var \
+          --exclude=backend/tuniskill-api/.env.local
+
+    - name: Upload deployment artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: tuniskill-deployment
+        path: tuniskill-deployment.tar.gz
+        retention-days: 30
+
+    # Add deployment steps here based on your hosting provider
+    # Example for deploying to staging/production environments
+

@@ -1,0 +1,197 @@
+# TuniSkill Project .gitignore
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.metadata
+.buildpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Environment and Configuration Files
+.env.local
+.env.*.local
+.env.production
+.env.staging
+config/secrets/prod/
+
+# Backend (Symfony) Specific
+/backend/tuniskill-api/.env.local
+/backend/tuniskill-api/.env.local.php
+/backend/tuniskill-api/.env.*.local
+/backend/tuniskill-api/config/secrets/prod/
+/backend/tuniskill-api/public/bundles/
+/backend/tuniskill-api/var/
+/backend/tuniskill-api/vendor/
+/backend/tuniskill-api/composer.lock
+/backend/tuniskill-api/.phpunit.result.cache
+/backend/tuniskill-api/phpunit.xml
+/backend/tuniskill-api/.php-cs-fixer.cache
+/backend/tuniskill-api/.php-cs-fixer.php
+/backend/tuniskill-api/symfony.lock
+
+# Frontend (Angular) Specific
+/frontend/tuniskill-frontend/node_modules/
+/frontend/tuniskill-frontend/dist/
+/frontend/tuniskill-frontend/tmp/
+/frontend/tuniskill-frontend/out-tsc/
+/frontend/tuniskill-frontend/bazel-out/
+/frontend/tuniskill-frontend/.angular/cache/
+/frontend/tuniskill-frontend/.sass-cache/
+/frontend/tuniskill-frontend/connect.lock
+/frontend/tuniskill-frontend/coverage/
+/frontend/tuniskill-frontend/libpeerconnection.log
+/frontend/tuniskill-frontend/npm-debug.log*
+/frontend/tuniskill-frontend/yarn-error.log
+/frontend/tuniskill-frontend/testem.log
+/frontend/tuniskill-frontend/typings/
+/frontend/tuniskill-frontend/.nyc_output/
+/frontend/tuniskill-frontend/e2e/*.js
+/frontend/tuniskill-frontend/e2e/*.map
+
+# Package Manager Files
+package-lock.json
+yarn.lock
+composer.lock
+
+# Log Files
+*.log
+logs/
+*.log.*
+log/
+
+# Database Files
+*.sqlite
+*.sqlite3
+*.db
+
+# Temporary Files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# Build and Distribution Files
+build/
+dist/
+public/build/
+public/bundles/
+
+# Testing Files
+coverage/
+.nyc_output/
+.phpunit.result.cache
+phpunit.xml
+
+# Docker Files (if using Docker)
+.docker/
+docker-compose.override.yml
+
+# Backup Files
+*.bak
+*.backup
+*.old
+
+# Media and Upload Files
+uploads/
+media/
+storage/
+public/uploads/
+public/media/
+
+# Cache Files
+.cache/
+cache/
+.parcel-cache/
+
+# Security and Sensitive Files
+*.pem
+*.key
+*.crt
+*.p12
+secrets.json
+credentials.json
+
+# Documentation Build Files
+docs/_build/
+docs/.doctrees/
+
+# Dependency Directories
+node_modules/
+vendor/
+bower_components/
+
+# Runtime Files
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage Reports
+coverage/
+*.lcov
+.nyc_output/
+
+# Linting and Code Quality
+.eslintcache
+.php-cs-fixer.cache
+
+# Miscellaneous
+.sass-cache/
+.connect.lock
+.typings/
+.tscache/
+
+# Platform Specific
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Compiled Files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and Databases
+*.log
+*.sql
+*.sqlite
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
