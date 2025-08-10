@@ -1,0 +1,30 @@
+<mat-toolbar color="primary" class="header-toolbar">
+  <div class="header-container">
+    <div class="logo-section">
+      <a routerLink="/" class="logo-link">
+        <img src="/favicon.ico" alt="TuniSkill" class="logo-icon">
+        <span class="logo-text">TuniSkill</span>
+      </a>
+    </div>
+    
+    <div class="search-section">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput placeholder="Search for courses..." [(ngModel)]="searchQuery">
+      </mat-form-field>
+    </div>
+    
+    <div class="nav-section">
+      <nav class="nav-links">
+        <a routerLink="/courses" mat-button>Courses</a>
+        <a routerLink="/categories" mat-button>Categories</a>
+        <a routerLink="/about" mat-button>About</a>
+      </nav>
+      
+      <div class="auth-buttons">
+        <button mat-stroked-button color="primary" class="login-btn">Log In</button>
+        <button mat-raised-button color="accent" class="signup-btn">Sign Up</button>
+      </div>
+    </div>
+  </div>
+</mat-toolbar>

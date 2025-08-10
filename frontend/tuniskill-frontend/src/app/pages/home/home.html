@@ -1,0 +1,70 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <app-hero-section></app-hero-section>
+
+  <!-- API Connection Status -->
+  <section class="api-status-section" *ngIf="!apiConnected">
+    <mat-card class="status-card error">
+      <mat-card-content>
+        <h3>API Connection Status</h3>
+        <p>Unable to connect to the TuniSkill API. Please check if the backend server is running.</p>
+        <button mat-raised-button color="primary" (click)="retryConnection()">
+          Retry Connection
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <!-- Featured Courses Section -->
+  <section class="courses-section">
+    <div class="section-header">
+      <h2>Featured Courses</h2>
+      <p>Discover our most popular courses and start learning today</p>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-container" *ngIf="loading">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading courses...</p>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="courses-grid" *ngIf="!loading && courses.length > 0">
+      <app-course-card 
+        *ngFor="let course of courses" 
+        [course]="course">
+      </app-course-card>
+    </div>
+
+    <!-- No Courses Message -->
+    <div class="no-courses" *ngIf="!loading && courses.length === 0">
+      <mat-card>
+        <mat-card-content>
+          <h3>No courses available</h3>
+          <p>We're working on adding more courses. Please check back later!</p>
+          <button mat-raised-button color="primary" (click)="loadCourses()">
+            Refresh
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Call to Action Section -->
+  <section class="cta-section">
+    <mat-card class="cta-card">
+      <mat-card-content>
+        <h2>Ready to Start Learning?</h2>
+        <p>Join thousands of students already learning on TuniSkill</p>
+        <div class="cta-buttons">
+          <button mat-raised-button color="primary" class="cta-button">
+            Browse All Courses
+          </button>
+          <button mat-stroked-button color="primary" class="cta-button">
+            Sign Up Free
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+</div>

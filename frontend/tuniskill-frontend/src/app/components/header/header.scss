@@ -1,0 +1,150 @@
+.header-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.logo-section {
+  flex: 0 0 auto;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+}
+
+.search-section {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 32px;
+}
+
+.search-field {
+  width: 100%;
+  
+  .mat-mdc-form-field-wrapper {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+  
+  .mat-mdc-text-field-wrapper {
+    background-color: transparent;
+  }
+  
+  input {
+    color: white;
+    
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+  
+  .mat-icon {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.nav-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 0 0 auto;
+}
+
+.nav-links {
+  display: flex;
+  gap: 8px;
+  
+  a {
+    color: white;
+    text-decoration: none;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.login-btn {
+  color: white;
+  border-color: white;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.signup-btn {
+  background-color: #ff6b35;
+  color: white;
+  
+  &:hover {
+    background-color: #e55a2b;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0 8px;
+  }
+  
+  .search-section {
+    display: none;
+  }
+  
+  .nav-links {
+    display: none;
+  }
+  
+  .logo-text {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-buttons {
+    flex-direction: column;
+    gap: 4px;
+    
+    button {
+      font-size: 12px;
+      padding: 4px 8px;
+    }
+  }
+}
+
